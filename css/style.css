@@ -102,7 +102,11 @@ body {
     display: block;
     margin: 0 auto;
 }
-
+.button:disabled {
+    background: #D8D8D8;
+    border-color: #fff;
+    cursor: not-allowed;
+}
 .img-fluid {
     width: 100%;
     height: auto;
