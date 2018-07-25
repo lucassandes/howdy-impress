@@ -17,7 +17,7 @@ function makeGuess(player) {
     .then(function (data) {
       console.log(`RESULT Guess player=${player} guess=${guess} = ${data.guess}`);
 
-      if (data.guess === "Bingo!!!" || guess == 22) {
+      if (data.guess === "Bingo!!!" || guess == 42) {
         console.log("Bingo!");
         toggleAllButtons();
         showWinner(player, guess);
