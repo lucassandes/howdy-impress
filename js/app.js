@@ -1,104 +1,116 @@
-(function IIFE() {
-  "use strict";
+// (function IIFE() {
+"use strict";
 
 
-  const API_URL = "https://www.drukzo.nl.joao.hlop.nl/challenge.php";
-  const $ = document.getElementById.bind(document);
+const API_URL = "https://www.drukzo.nl.joao.hlop.nl/challenge.php";
+const $ = document.getElementById.bind(document);
 
-  function makeGuess(player) {
-    const guessElement = $('input-' + player);
-    const guess = guessElement.value;
-    const params = {
-      method: 'GET'
-    };
+function makeGuess(player) {
+  const guessElement = $(`input-${player}`);
+  const guess = guessElement.value;
+  const params = {
+    method: 'GET'
+  };
+  
+  const buttonElement = $(`button-${player}`);
+  animateElementCSS(buttonElement, "pulse");
+  console.log(`Make Guess player=${player} guess=${guess}`);
 
-    console.log(`Make Guess player=${player} guess=${guess}`);
+  if (guess < 0 || guess > 100 || !guess) {
+    animateElementCSS(guessElement, "shake", 500);
 
-    if (guess < 0 || guess > 100) {
-      guessElement.classList.remove("animated", "shake");
-      guessElement.classList.add("animated", "shake");
-    } else {
-      fetch(`${API_URL}?player=${player}&guess=${guess}`, params)
-        .then((resp) => resp.json())
-        .then(function (data) {
-          console.log(`RESULT Guess player=${player} guess=${guess} = ${data.guess}`);
+  } else {
+    fetch(`${API_URL}?player=${player}&guess=${guess}`, params)
+      .then((resp) => resp.json())
+      .then(function (data) {
+        console.log(`RESULT Guess player=${player} guess=${guess} = ${data.guess}`);
 
-          if (data.guess === "Bingo!!!" || guess == 42) {
-            toggleAllButtons();
-            showWinner(player, guess);
-          }
+        if (data.guess === "Bingo!!!" || guess == 42) {
+          toggleAllButtons();
+          showWinner(player, guess);
+        }
 
-        }).catch(function (error) {
-          console.log(error);
-        });
-    }
+      }).catch(function (error) {
+        console.log(error);
+      });
   }
+}
 
-  function createPlayers(players) {
-    const playerContainer = $('player-container');
+function animateElementCSS(element, animation, duration) {
+  element.classList.add("animated-fast", animation);
+  setTimeout(function () {
+    element.classList.remove("animated-fast", animation);
+   
+  }, 1000);
+}
 
-    for (let pl of players) {
-      const element =
-        `<div class="player" id="player-${pl.id}">
+function createPlayers(players) {
+  const playerContainer = $('player-container');
+
+  for (let pl of players) {
+    const element =
+      `<div class="player" id="player-${pl.id}">
           <div class="instruction">Enter a number between 0 and 100</div>
           <input type="number" id="input-${pl.id}" class="input"  />
-          <button class="button" onclick="makeGuess(${pl.id})">Submit</button>
+          <button class="button" id="button-${pl.id}"  onclick="makeGuess(${pl.id})">Submit</button>
       </div>`;
-      playerContainer.insertAdjacentHTML("beforeend", element);
-    }
+    playerContainer.insertAdjacentHTML("beforeend", element);
   }
+}
 
-  function showWinner(player, guess) {
-    const appContainer = $('app');
+function showWinner(player, guess) {
+  const appContainer = $('app');
 
-    const element =
-      `<div class="winner" id="winner">
-      <div>Bingo!!!</div>
-      <div>Congratulations Player ${player}, you guessed it right!</div>
-      <div>The right number is: ${guess}</div>
-      <button onclick="restartGame()">Restart</button>
+  const element =
+    `<div class="winner-wrapper text-center animated-fast slideInUp" id="winner">
+      <div>
+        <div class="animated swing">
+          <span class="bingo bingo-b">B</span>
+          <span class="bingo bingo-i">I</span>
+          <span class="bingo bingo-n">N</span>
+          <span class="bingo bingo-g">G</span>
+          <span class="bingo bingo-o">O</span>
+        </div>
+        <div class="winner-message">Congratulations <span class="text-jumbo">Player ${player}</span>, you guessed it right!<br/>
+            The right number is: <span class="text-jumbo">${guess}</span></div>
+        <button class="button" onclick="restartGame()">Restart Game</button>
+      </div>
     </div>`;
 
-    appContainer.insertAdjacentHTML("afterbegin", element);
+  appContainer.insertAdjacentHTML("afterbegin", element);
+}
+
+function restartGame() {
+  toggleAllButtons();
+
+  const winnerContainer = $('winner');
+  winnerContainer.remove();
+
+  const inputs = document.getElementsByClassName('input');
+  for (let inp of inputs) {
+    inp.value = "";
   }
+}
 
-  function restartGame() {
-    toggleAllButtons();
-
-    const winnerContainer = $('winner');
-    winnerContainer.remove();
-
-    const inputs = document.getElementsByClassName('input');
-    for (let inp of inputs) {
-      inp.value = "";
-    }
+function toggleAllButtons() {
+  const buttons = document.getElementsByClassName('button');
+  for (let btn of buttons) {
+    btn.disabled = !btn.disabled;
   }
+}
 
-  function toggleAllButtons() {
-    const buttons = document.getElementsByClassName('button');
-    for (let btn of buttons) {
-      btn.disabled = !btn.disabled;
-    }
-  }
+let players = [{
+    id: 1,
+    guess: null
+  },
+  {
+    id: 2,
+    guess: null
+  },
+  {
+    id: 3,
+    guess: null
+  },
+];
 
-  let players = [{
-      id: 1,
-      guess: null
-    },
-    {
-      id: 2,
-      guess: null
-    },
-    {
-      id: 3,
-      guess: null
-    },
-  ];
-
-  createPlayers(players);
-})();
-// var app = (function IIFE(){
-//   alert('HUBESE!');
-//   const testee = function() {
-//     alert('HUE!');
-//   };
+createPlayers(players);

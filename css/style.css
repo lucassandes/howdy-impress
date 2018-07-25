@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Bangers');
+@import url('./animations.css');
 html {
     font-size: 62.5%;
 }
@@ -79,10 +81,10 @@ body {
 
 .instruction {
     color: #9B9B9B;
-    
     margin: 0 auto;
     text-align: center;
 }
+
 @media (min-width: 550px) {
     .instruction {
         max-width: 120px;
@@ -102,11 +104,13 @@ body {
     display: block;
     margin: 0 auto;
 }
+
 .button:disabled {
     background: #D8D8D8;
     border-color: #fff;
     cursor: not-allowed;
 }
+
 .img-fluid {
     width: 100%;
     height: auto;
@@ -117,7 +121,7 @@ body {
     margin-bottom: 8px;
 }
 
-.winner {
+.winner-wrapper {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -125,42 +129,68 @@ body {
     right: 0;
     height: 100%;
     width: 100%;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(255, 255, 255, 0.8);
     z-index: 2;
-    color: white;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
 }
 
-@import url('animations.css');
+.text-center {
+    text-align: center;
+}
 
-.animated {
-    animation-duration: 1s;
-    animation-fill-mode: both;
-  }
-  
-  .animated.infinite {
-    animation-iteration-count: infinite;
-  }
-  
-  @keyframes shake {
-    from,
-    to {
-      transform: translate3d(0, 0, 0);
+.bingo {
+    font-size: 4rem;
+    border: 10px solid white;
+    border-radius: 10px;
+    width: 40px;
+    display: inline-block;
+    color: white;
+    font-weight: bold;
+    box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.3);
+    margin-bottom: 40px;
+}
+
+@media (min-width: 550px) {
+    .bingo {
+        width: 95px;
+        font-size: 10rem;
     }
-    10%,
-    30%,
-    50%,
-    70%,
-    90% {
-      transform: translate3d(-10px, 0, 0);
-    }
-    20%,
-    40%,
-    60%,
-    80% {
-      transform: translate3d(10px, 0, 0);
-    }
-  }
-  
-  .shake {
-    animation-name: shake;
-  }
+}
+
+.bingo-b {
+    background: linear-gradient(#7497D9, #5479CA);
+    transform: rotate(-15deg);
+}
+
+.bingo-i {
+    background: linear-gradient(#FDCD56, #FBB73E);
+    transform: rotate(13deg);
+}
+
+.bingo-n {
+    background: linear-gradient(#94D27A, #74BF5A);
+    transform: rotate(-10deg);
+}
+
+.bingo-g {
+    background: linear-gradient(#BB75DA, #A356CA);
+    transform: rotate(21deg);
+}
+
+.bingo-o {
+    background: linear-gradient(#FD9141, #FD6F2D);
+    transform: rotate(-5deg);
+}
+
+.text-jumbo{
+    font-weight: bold;
+    font-size: 2.4rem;
+}
+
+.winner-message{ 
+    margin-bottom: 20px;
+}
