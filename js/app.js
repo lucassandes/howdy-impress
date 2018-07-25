@@ -40,8 +40,7 @@ const game = (function () {
         .then(function (data) {
           console.log(`[RESPONSE to PLAYER ${player}]: guess=${guess} => Response: ${data.guess}`);
           if (data.guess === "Bingo!!!" || guess == 42) {
-            disableAllButtons(true);
-            showWinner(player, guess);
+            endGame(player, guess)
           }
 
         }).catch(function (error) {
@@ -56,6 +55,14 @@ const game = (function () {
       element.classList.remove("animated-fast", animation);
 
     }, 300);
+  }
+
+  function endGame(player, guess) {
+    const hasWinner = Boolean($('winner'));
+    if(!hasWinner) {
+      disableAllButtons(true);
+      showWinner(player, guess);
+    }
   }
 
   function createPlayers(players) {
