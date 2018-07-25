@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css?family=Bangers');
 @import url('./animations.css');
 html {
     font-size: 62.5%;
@@ -186,11 +185,11 @@ body {
     transform: rotate(-5deg);
 }
 
-.text-jumbo{
+.text-jumbo {
     font-weight: bold;
     font-size: 2.4rem;
 }
 
-.winner-message{ 
+.winner-message {
     margin-bottom: 20px;
 }

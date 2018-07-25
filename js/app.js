@@ -4,8 +4,8 @@ const game = (function () {
 
   const API_URL = "https://www.drukzo.nl.joao.hlop.nl/challenge.php";
   const $ = document.getElementById.bind(document);
-  
-  let players = [{
+
+  const players = [{
       id: 1
     },
     {
@@ -15,7 +15,7 @@ const game = (function () {
       id: 3
     },
   ];
-  
+
   createPlayers(players);
 
 
@@ -34,32 +34,27 @@ const game = (function () {
 
     const buttonElement = $(`button-${player}`);
     animateElementCSS(buttonElement, "pulse");
+
     console.log(`Make Guess player=${player} guess=${guess}`);
 
     if (guess < 0 || guess > 100 || !guess) {
-      animateElementCSS(guessElement, "shake", 500);
+      animateElementCSS(guessElement, "shake");
     } else {
       fetch(`${API_URL}?player=${player}&guess=${guess}`, params)
         .then((resp) => resp.json())
         .then(function (data) {
+
           console.log(`RESULT Guess player=${player} guess=${guess} = ${data.guess}`);
 
           if (data.guess === "Bingo!!!" || guess == 42) {
-            toggleAllButtons();
+            disableAllButtons(true);
             showWinner(player, guess);
-          } else {
-            showTip(player, data.guess);
           }
-
 
         }).catch(function (error) {
           console.log(error);
         });
     }
-  }
-
-  function showTip() {
-
   }
 
   function animateElementCSS(element, animation, duration) {
@@ -107,7 +102,7 @@ const game = (function () {
   }
 
   function restartGame() {
-    toggleAllButtons();
+    disableAllButtons(false);
 
     const winnerContainer = $('winner');
     winnerContainer.remove();
@@ -118,16 +113,11 @@ const game = (function () {
     }
   }
 
-  function toggleAllButtons() {
+  function disableAllButtons(bool) {
     const buttons = document.getElementsByClassName('button');
     for (let btn of buttons) {
-      btn.disabled = !btn.disabled;
+      btn.disabled = bool;
     }
   }
-
-
-
-
-
 
 })();
