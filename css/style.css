@@ -1,4 +1,6 @@
 @import url('./animations.css');
+
+/* small reset*/
 html {
     font-size: 62.5%;
 }
@@ -8,10 +10,7 @@ body {
     margin: 0;
     padding: 0;
     min-height: 100%;
-    min-width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    min-width: 100%;   
 }
 
 body {
@@ -19,6 +18,28 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
+/* utilities */
+.flex-center-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.text-jumbo {
+    font-weight: bold;
+    font-size: 2.4rem;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.img-fluid {
+    width: 100%;
+    height: auto;
+}
+
+/* game classes */
 .container {
     position: relative;
     width: 100%;
@@ -93,7 +114,7 @@ body {
 .button {
     background: #5DA527;
     border: 1px solid #4A7E21;
-    font-size: 12px;
+    font-size: 1.2rem;
     font-weight: bold;
     color: white;
     padding: 8px 10px;
@@ -110,16 +131,12 @@ body {
     cursor: not-allowed;
 }
 
-.img-fluid {
-    width: 100%;
-    height: auto;
-}
-
 .input,
 .instruction {
     margin-bottom: 8px;
 }
 
+/* winner */ 
 .winner-wrapper {
     position: absolute;
     top: 0;
@@ -131,14 +148,7 @@ body {
     background: rgba(255, 255, 255, 0.8);
     z-index: 2;
     color: black;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     font-size: 1.6rem;
-}
-
-.text-center {
-    text-align: center;
 }
 
 .bingo {
@@ -183,11 +193,6 @@ body {
 .bingo-o {
     background: linear-gradient(#FD9141, #FD6F2D);
     transform: rotate(-5deg);
-}
-
-.text-jumbo {
-    font-weight: bold;
-    font-size: 2.4rem;
 }
 
 .winner-message {

@@ -1,51 +1,44 @@
 "use strict";
 
 const game = (function () {
-
   const API_URL = "https://www.drukzo.nl.joao.hlop.nl/challenge.php";
-  const $ = document.getElementById.bind(document);
-
-  const players = [{
-      id: 1
-    },
-    {
-      id: 2
-    },
-    {
-      id: 3
-    },
+  const $ = document.getElementById.bind(document); 
+  const players = [
+    { id: 1 },
+    { id: 2 },
+    { id: 3 },
   ];
-
-  createPlayers(players);
-
-
+  
   return {
     makeGuess: makeGuess,
-    restartGame: restartGame
+    restartGame: restartGame,
+    startGame: startGame,
   };
 
+
+  function startGame(){
+    createPlayers(players);
+  }
 
   function makeGuess(player) {
     const guessElement = $(`input-${player}`);
     const guess = guessElement.value;
+    const buttonElement = $(`button-${player}`);
     const params = {
       method: 'GET'
     };
 
-    const buttonElement = $(`button-${player}`);
     animateElementCSS(buttonElement, "pulse");
 
-    console.log(`Make Guess player=${player} guess=${guess}`);
-
+    console.log(`[PLAYER ${player}] made a guess. GUESS = ${guess}`);
     if (guess < 0 || guess > 100 || !guess) {
       animateElementCSS(guessElement, "shake");
+      console.log(`[RESPONSE to PLAYER ${player}]: Player ${player} - guess=${guess} => Response: not between 0 and 100`);
     } else {
       fetch(`${API_URL}?player=${player}&guess=${guess}`, params)
         .then((resp) => resp.json())
         .then(function (data) {
-
-          console.log(`RESULT Guess player=${player} guess=${guess} = ${data.guess}`);
-
+          console.log(`[RESPONSE to PLAYER ${player}]: guess=${guess} => Response: ${data.guess}`);
           if (data.guess === "Bingo!!!" || guess == 42) {
             disableAllButtons(true);
             showWinner(player, guess);
@@ -81,33 +74,31 @@ const game = (function () {
 
   function showWinner(player, guess) {
     const appContainer = $('app');
-
     const element =
-      `<div class="winner-wrapper text-center animated-fast slideInUp" id="winner">
-      <div>
-        <div class="animated swing">
-          <span class="bingo bingo-b">B</span>
-          <span class="bingo bingo-i">I</span>
-          <span class="bingo bingo-n">N</span>
-          <span class="bingo bingo-g">G</span>
-          <span class="bingo bingo-o">O</span>
+      `<div class="winner-wrapper text-center flex-center-center animated-fast slideInUp" id="winner">
+        <div>
+          <div class="animated swing">
+            <span class="bingo bingo-b">B</span>
+            <span class="bingo bingo-i">I</span>
+            <span class="bingo bingo-n">N</span>
+            <span class="bingo bingo-g">G</span>
+            <span class="bingo bingo-o">O</span>
+          </div>
+          <div class="winner-message">Congratulations <span class="text-jumbo">Player ${player}</span>, you guessed it right!<br/>
+              The right number is: <span class="text-jumbo">${guess}</span></div>
+          <button class="button" onclick="game.restartGame()">Restart Game</button>
         </div>
-        <div class="winner-message">Congratulations <span class="text-jumbo">Player ${player}</span>, you guessed it right!<br/>
-            The right number is: <span class="text-jumbo">${guess}</span></div>
-        <button class="button" onclick="game.restartGame()">Restart Game</button>
-      </div>
-    </div>`;
-
+      </div>`;
     appContainer.insertAdjacentHTML("afterbegin", element);
   }
 
   function restartGame() {
-    disableAllButtons(false);
-
     const winnerContainer = $('winner');
-    winnerContainer.remove();
-
     const inputs = document.getElementsByClassName('input');
+    
+    disableAllButtons(false);
+    winnerContainer.remove();
+    
     for (let inp of inputs) {
       inp.value = "";
     }
@@ -121,3 +112,5 @@ const game = (function () {
   }
 
 })();
+
+game.startGame();
