@@ -22,38 +22,75 @@ const game = (function () {
 
   function makeGuess(player) {
     const guessElement = $(`input-${player}`);
+    const bingo = "Bingo!!!";
     const guess = guessElement.value;
     const buttonElement = $(`button-${player}`);
     const params = {
       method: 'GET'
     };
 
-    animateElementCSS(buttonElement, "pulse");
-
     console.log(`[PLAYER ${player}] made a guess. GUESS = ${guess}`);
     if (guess < 0 || guess > 100 || !guess) {
+      animateElementCSS(buttonElement, "pulse");
       animateElementCSS(guessElement, "shake");
       console.log(`[RESPONSE to PLAYER ${player}]: Player ${player} - guess=${guess} => Response: not between 0 and 100`);
     } else {
+
+      buttonElement.disabled = true;
+      buttonElement.classList.add("animated", "infinite", "pulse");
+
       fetch(`${API_URL}?player=${player}&guess=${guess}`, params)
         .then((resp) => resp.json())
         .then(function (data) {
           console.log(`[RESPONSE to PLAYER ${player}]: guess=${guess} => Response: ${data.guess}`);
-          if (data.guess === "Bingo!!!" || guess == 42) {
-            endGame(player, guess)
+          if (data.guess === bingo || guess == 42) {
+            endGame(player, guess);
+          }
+          else {
+            showTip(player, data.guess);
+            buttonElement.disabled = false;
           }
 
         }).catch(function (error) {
           console.log(error);
+        }).then(() => {
+          buttonElement.classList.remove("animated");
         });
     }
+  }
+
+  function showTip(player, guessResult) {
+    const higher = "higher";
+    const lower = "lower";
+    const tipElement = $(`tip-${player}`);
+    const higherAnimations = ["tip-higher", "fadeOutUp"];
+    const lowerAnimations = ["tip-lower", "fadeOutDown"];
+    
+    tipElement.classList.remove('display-none');
+
+    switch (guessResult){
+      case higher: 
+        tipElement.classList.remove(...lowerAnimations);
+        tipElement.classList.add(...higherAnimations);
+        tipElement.innerHTML = `${higher} ⬆`;
+        break;
+      case lower: 
+        tipElement.classList.remove(...higherAnimations);
+        tipElement.classList.add(...lowerAnimations);
+        tipElement.innerHTML = `${lower} ⬇`;
+        break;
+    }
+
+    setTimeout(function () {
+      tipElement.classList.add('display-none');
+    }, 1000);
+    
   }
 
   function animateElementCSS(element, animation, duration) {
     element.classList.add("animated-fast", animation);
     setTimeout(function () {
       element.classList.remove("animated-fast", animation);
-
     }, 300);
   }
 
@@ -72,6 +109,7 @@ const game = (function () {
       const element =
         `<div class="player" id="player-${pl.id}">
           <div class="instruction">Enter a number between 0 and 100</div>
+          <div class="display-none animated tip text-center" id="tip-${pl.id}"></div>
           <input type="number" id="input-${pl.id}" class="input"  />
           <button class="button" id="button-${pl.id}"  onclick="game.makeGuess(${pl.id})">Submit</button>
       </div>`;
